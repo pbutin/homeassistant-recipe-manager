@@ -39,7 +39,15 @@ Click on Resources and add this entry :
 ## Usage
 
  1.   Call `recipe_manager.add_recipe` to add a recipe.
- 2.   Use a Lovelace card to display recipes using the YAML : `type: custom:recipe-card`
+Data should be :
+```JSON
+{
+  "name": "Chocolate Cake",
+  "ingredients": ["2 cups flour", "1 cup sugar", "2 eggs"],
+  "steps": ["Mix ingredients", "Bake for 30 minutes"]
+}
+```
+ 3.   Use a Lovelace card to display recipes using the YAML : `type: custom:recipe-card`
 
 ## License
 
