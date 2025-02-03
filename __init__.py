@@ -24,11 +24,14 @@ CONFIG_SCHEMA = vol.Schema(
 def setup(hass, config):
     """Set up the Recipe Manager component."""
     recipes = config[DOMAIN].get(CONF_RECIPES, [])
-    hass.data[DOMAIN] = RecipeManager(hass, recipes)
+    manager = RecipeManager(hass, recipes)
 
-    # Force sensor creation
-    hass.states.set("sensor.recipe_manager", len(recipes), {"recipes": recipes})
-    _LOGGER.info("Recipe Manager Sensor Created: sensor.recipe_manager")
+    # Ensure loaded recipes are restored
+    hass.data[DOMAIN] = manager
+
+    # Update sensor with the loaded recipes
+    hass.states.set("sensor.recipe_manager", len(manager.recipes), {"recipes": manager.recipes})
+    _LOGGER.info("Recipe Manager Sensor Created: sensor.recipe_manager with %d recipes", len(manager.recipes))
 
     def handle_add_recipe(call):
         """Add a recipe via service."""
@@ -36,15 +39,16 @@ def setup(hass, config):
         ingredients = call.data.get("ingredients", [])
         steps = call.data.get("steps", [])
 
-        hass.data[DOMAIN].add_recipe(name, ingredients, steps)
+        manager.add_recipe(name, ingredients, steps)
 
         # Update the sensor state
-        hass.states.set("sensor.recipe_manager", len(hass.data[DOMAIN].recipes), {"recipes": hass.data[DOMAIN].recipes})
+        hass.states.set("sensor.recipe_manager", len(manager.recipes), {"recipes": manager.recipes})
         _LOGGER.info(f"Recipe Added: {name}")
 
     hass.services.register(DOMAIN, "add_recipe", handle_add_recipe)
 
     return True
+
 
 class RecipeManager:
     """Manage recipes in Home Assistant."""
