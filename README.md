@@ -30,10 +30,16 @@ recipe_manager:
 ```
 
  4. Check Developer Tools → States for `sensor.recipe_manager`.
+ 5. Install Lovelace UI component
+Move `recipe-card.js` to the `www` folder 
+Open Home Assistant UI → Go to Settings → Dashboards.
+Click on Resources and add this entry :
+ - URL: /local/recipe-card.js
+ - Type: JavaScript Module
 ## Usage
 
- 6.   Call `recipe_manager.add_recipe` to add a recipe.
- 7.   Use a Lovelace card to display recipes.
+ 1.   Call `recipe_manager.add_recipe` to add a recipe.
+ 2.   Use a Lovelace card to display recipes.
 
 ## License
 
