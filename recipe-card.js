@@ -2,7 +2,10 @@ class RecipeCard extends HTMLElement {
     constructor() {
         super();
         this.openRecipes = {}; // Store open/closed state
+        this.filteredRecipes = []; // Store filtered recipes
+        this.allRecipes = []; // Store all recipes
     }
+
     setConfig(config) {
         this.config = config;
         if (!this.shadowRoot) {
@@ -10,6 +13,9 @@ class RecipeCard extends HTMLElement {
         }
         this.shadowRoot.innerHTML = `
             <ha-card header="Recipe Manager">
+                <div class="search-container">
+                    <input type="text" id="search-input" placeholder="Search recipes..." />
+                </div>
                 <div id="recipe-content" class="card-content">
                     Loading recipes...
                 </div>
@@ -20,6 +26,17 @@ class RecipeCard extends HTMLElement {
                     --secondary-color: #F5F5F5;
                     --text-color: #333;
                     --border-color: #E0E0E0;
+                }
+                .search-container {
+                    padding: 10px;
+                    text-align: center;
+                }
+                #search-input {
+                    width: 90%;
+                    padding: 8px;
+                    border: 1px solid var(--border-color);
+                    border-radius: 4px;
+                    font-size: 14px;
                 }
                 .recipe-name {
                     cursor: pointer;
@@ -56,13 +73,32 @@ class RecipeCard extends HTMLElement {
             </style>
         `;
     }
+
     set hass(hass) {
         if (!this.config || !this.shadowRoot) return;
         const entity = hass.states["sensor.recipe_manager"];
-        const recipes = entity ? entity.attributes.recipes : [];
+        this.allRecipes = entity ? entity.attributes.recipes : [];
+        this.filteredRecipes = [...this.allRecipes]; // Initialize with all recipes
+
+        this.renderRecipes();
+        this.setupSearch();
+    }
+
+    setupSearch() {
+        const searchInput = this.shadowRoot.getElementById("search-input");
+        searchInput.addEventListener("input", (event) => {
+            const query = event.target.value.toLowerCase();
+            this.filteredRecipes = this.allRecipes.filter(recipe =>
+                recipe.name.toLowerCase().includes(query)
+            );
+            this.renderRecipes();
+        });
+    }
+
+    renderRecipes() {
         let content = "<p>No recipes found.</p>";
-        if (recipes.length > 0) {
-            content = recipes.map((recipe, index) => `
+        if (this.filteredRecipes.length > 0) {
+            content = this.filteredRecipes.map((recipe, index) => `
                 <div>
                     <span class="recipe-name" data-index="${index}">${recipe.name}</span>
                     <div class="recipe-details" id="recipe-${index}" style="display: ${this.openRecipes[index] ? "block" : "none"};">
@@ -79,6 +115,7 @@ class RecipeCard extends HTMLElement {
             `).join("");
         }
         this.shadowRoot.getElementById("recipe-content").innerHTML = content;
+
         // Add event listeners to toggle recipe details
         this.shadowRoot.querySelectorAll(".recipe-name").forEach(item => {
             item.addEventListener("click", (event) => {
@@ -88,8 +125,10 @@ class RecipeCard extends HTMLElement {
             });
         });
     }
+
     getCardSize() {
         return 3;
     }
 }
+
 customElements.define("recipe-card", RecipeCard);
