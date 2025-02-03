@@ -1,0 +1,9 @@
+{
+  "domain": "recipe_manager",
+  "name": "Recipe Manager",
+  "documentation": "https://github.com/pbutin/recipe-manager",
+  "dependencies": [],
+  "codeowners": ["@pbutin"],
+  "version": "1.0.0",
+  "requirements": []
+}
