@@ -36,8 +36,7 @@ class RecipeCard extends HTMLElement {
                     display: none;
                     margin-top: 5px;
                     padding: 15px;
-                    border: 1px solid black;
-                    border-radius: 4px;
+                    border-left: 2px solid #ddd;
                 }
                 .recipe-details ul, 
                 .recipe-details ol {
