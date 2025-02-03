@@ -38,8 +38,8 @@ Click on Resources and add this entry :
  - Type: JavaScript Module
 ## Usage
 
- 1.   Call `recipe_manager.add_recipe` to add a recipe.
-Data should be :
+ 1.   Call `recipe_manager.add_recipe` to add a recipe. Go to `Devellopers tools`, `actions` ans search `Recipe Manager: add_recipe`
+Change the data for:
 ```JSON
 {
   "name": "Chocolate Cake",
