@@ -39,7 +39,7 @@ Click on Resources and add this entry :
 ## Usage
 
  1.   Call `recipe_manager.add_recipe` to add a recipe.
- 2.   Use a Lovelace card to display recipes.
+ 2.   Use a Lovelace card to display recipes using the YAML : `type: custom:recipe-card`
 
 ## License
 
